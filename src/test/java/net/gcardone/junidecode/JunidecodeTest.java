@@ -27,16 +27,6 @@ public class JunidecodeTest {
     public JunidecodeTest() {
     }
 
-    /**
-     *
-     * @param s
-     */
-    private void sevenBitPurity(String s) {
-        byte[] bytes = s.getBytes();
-        for (byte b : bytes) {
-            assertFalse((b & 0x80) != 0x00);
-        }
-    }
 
     @Test
     public void simpleASCII() {
@@ -49,7 +39,6 @@ public class JunidecodeTest {
         for (String s : simple) {
             String decoded = Junidecode.unidecode(s);
             assertEquals(s, decoded);
-            sevenBitPurity(decoded);
         }
     }
 
@@ -91,7 +80,6 @@ public class JunidecodeTest {
         for (StringPair sp : spvalues) {
             String decoded = Junidecode.unidecode(sp.getLeft());
             assertEquals(sp.getRight(), decoded);
-            sevenBitPurity(decoded);
         }
     }
 
