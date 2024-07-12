@@ -1,7 +1,9 @@
-JUnidecode - A Unicode to ASCII Java Library
+JUnidecode - A Unicode to Latin-1 / ISO-8859-1 Java Library
 ============================================
 
-> If you already know what is Unicode and you are sure that you know that you want to convert it to 7-bit ASCII and of the downside that it has, you can skip the chit-chat and jump to [JUnidecode description](#junidecode) or [download section](#download).
+> This library is a small adaptation from the [original library](https://github.com/gcardone/junidecode) by Giuseppe Cardone, which is a java port from [Text::Unidecode](http://search.cpan.org/~sburke/Text-Unidecode-0.04/lib/Text/Unidecode.pm). This library provides a sensible mapping for all utf-8 strings to strings that contain only Latin-1 / ISO-8859-1 characters. 
+
+> If you already know what is Unicode and you are sure that you know that you want to convert it to Latin-1 and of the downside that it has, you can skip the chit-chat and jump to [JUnidecode description](#junidecode) or [download section](#download).
 
 > This page contains Unicode characters. If the font that you are using doesn't contain all the characters you may get a garbled output. In this case try to install and use a font with a good Unicode support like DejaVu. 
 
@@ -74,7 +76,7 @@ This code is more refined than the previous one. It first applies a canonical de
 Both techniques remove diacritic marks and transform, for example, "côté" in "cote" and "Ελληνικά" in "Ελληνικα". Wait, what's that? If you don't have a greek keyboard you should use a lot of alt+[numeric code] to write that word.
 
 
-Unicode to ASCII: why and how
+Unicode to Latin-1 / ISO-8859-1: why and how
 -----------------------------
 
 Let's say that you've got an e-mail from Mr. まさゆき たけだ. Assuming that you do not speak japanese and you don't know what "hiragana" is, how are you going to add this person to your address book? And, even more important: how are you going to retrieve him?. Sometimes it's worse: a lot of software doesn't know how to handle characters that do not belong to the usual blocks, so they mangle the output and show just a bunch of question marks, so the e-mail is from Mr. ���� ���, which is even less useful than "weird-stuff-that-I-can't-read". Sometimes they fail gracefully and show something like "[307E][3055][3086][304D] [305F][3051][3060]".
@@ -101,17 +103,22 @@ JUnidecode is a Java port of [Text::Unidecode](http://search.cpan.org/~sburke/Te
 
 JUnidecode official web site is [https://github.com/gcardone/junidecode]()
 
-JUnidecode has only one class, gcardone.junidecode.Junidecode, which, as of version 0.1, has only one method: public String unidecode(String s). It takes a String and transliterates it to a valid 7-bit ASCII String (obviously it also strips diacritic marks). For example:
+JUnidecode has only one class, gcardone.junidecode.Junidecode, which, as of version 0.1, has only one method: public String unidecode(String s). It takes a String and transliterates it to a valid 8-bit String with only Latin-1 / ISO-8859-1 characters. For example:
 
 ```
 import net.gcardone.junidecode;
 
 // ...
 
-// s = "résumé"
-String s = "r\u00E9sum\u00E9";
-System.out.print(Junidecode.unidecode(s));
-// prints "resume"
+// s1 = "résumé" -> é is a part of the Latin-1 charset
+String s1 = "r\u00E9sum\u00E9";
+System.out.print(Junidecode.unidecode(s1));
+// prints "résumé" -> Latin-1 chars are preserved
+
+// s2 = "čeština" -> č and š are a part of the Latin Extended-A charset
+String s2 = "\u010De\u0161tina";
+System.out.print(Junidecode.unidecode(s2));
+// prints "cestina" -> chars are transliterated
 ```
 
 This code can be made less verbose using the static import feature available on Java 5.0 and higher:
@@ -121,10 +128,10 @@ import static net.gcardone.junidecode.Junidecode.*;
 
 // ...
 
-// s = "résumé"
-String s = "r\u00E9sum\u00E9";
+// s = "čeština"
+String s = "\u010De\u0161tina";
 System.out.print(unidecode(s));
-// prints "resume"
+// prints "cestina"
 ```
 
 This is a little example of JUnidecode capabilities: 
@@ -132,7 +139,7 @@ This is a little example of JUnidecode capabilities:
 |     Unicode block      |                                 Original text                           | Transliteration  |                  Notes                   |
 | ---------------------- | ----------------------------------------------------------------------- | ---------------- | ---------------------------------------- |
 | Basic Latin            | JUnidecode.                                                             | JUnidecode.      |                                          |
-| Latin-1 Supplement     | r&eacute;sum&eacute;                                                    | resume           | All diacritic marks are always stripped. |
+| Latin-1 Supplement     | r&eacute;sum&eacute;                                                    | résumé           | NOT TRANSLITERATED                       |
 | Latin Extended-A       | &#269;e&#353;tina                                                       | cestina          |                                          | 
 | Armenian               | &#1344;&#1377;&#1397;&#1377;&#1405;&#1407;&#1377;&#1398;                | Hayastan         |                                          |
 | Cyrillic               | &#1052;&#1086;&#1089;&#1082;&#1074;a                                    | Moskva           |                                          |

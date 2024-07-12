@@ -52,8 +52,8 @@ public class JunidecodeTest {
     @Test
     public void someTests() {
         StringPair[] spvalues = new StringPair[]{
-            new StringPair("\u00C6neid", "AEneid"),
-            new StringPair("\u00e9tude", "etude"),
+            new StringPair("\u00C6neid", "Æneid"),
+            new StringPair("\u00e9tude", "étude"),
             // Chinese
             new StringPair("\u5317\u4eb0", "Bei Jing "),
             // Canadian syllabics
